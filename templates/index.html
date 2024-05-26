@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+{% from "bootstrap5/form.html" import render_form %}
+
+{% include "header.html" %}
+
+    <body id="page-top">
+        <!-- Navigation-->
+        <nav class="navbar navbar-expand-lg navbar-light fixed-top" id="mainNav">
+            <div class="container px-4 px-lg-5">
+                <a class="navbar-brand" href="#page-top">To-Do list</a>
+                <button class="navbar-toggler navbar-toggler-right" type="button" data-bs-toggle="collapse" data-bs-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+                    Menu
+                    <i class="fas fa-bars"></i>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarResponsive">
+                    <ul class="navbar-nav ms-auto">
+
+                    <li class="nav-item dropdown">
+                      <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        Organise by
+                      </a>
+                      <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        <li><a class="dropdown-item" href="{{ url_for('main_page', ordering_by='due_date') }}">Date</a></li>
+                        <li><a class="dropdown-item" href="{{ url_for('main_page', ordering_by='category') }}">Category</a></li>
+
+                      </ul>
+                    </li>
+
+
+                        <li class="nav-item"><a class="nav-link" href="#page-top">Back to Top</a></li>
+<!--                        <li class="nav-item"><a class="nav-link" href="#projects">Projects</a></li>-->
+                        <li class="nav-item"><a class="nav-link" href="#signup">Contact</a></li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+
+
+
+
+
+        <!-- Masthead-->
+        <header class="masthead">
+            <div class="container-fluid px-4 px-lg-5 d-flex h-100 align-items-center justify-content-center">
+<!--                <div class="d-flex justify-content-center">-->
+<!--my to-do list stuff-->
+
+
+
+<div class="row">
+
+            <div class="spacer">
+            &nbsp;
+        </div>
+
+        <div  class="column" id="all_list">
+            <div  class="container-fluid">
+                    <div class="heading container-fluid" style="margin-top:80px;margin-bottom:10px;padding-top:40px">
+
+
+
+                        <div style="--bs-bg-opacity: .5;" class="row text-black-50 mx-auto mt-2 mb-5 bg-light">
+                            <div class="col-6">Task</div>
+
+                            <div class="col-2">Category</div>
+
+                            <div class="col-2">Date</div>
+
+                            <div class="col-2">Functions</div>
+                        </div>
+
+                    </div>
+
+                        {% for entry in database_entries %}
+
+                        <div style="--bs-bg-opacity: .5;" class="row text-black-50 mx-auto mt-2 mb-3 bg-light">
+                            <div class="col-6">{{entry.to_do_task}}</div>
+
+                            <div class="col-2">{{entry.category}}</div>
+
+                            <div class="col-2">{{entry.due_date.strftime('%d-%m-%Y')}}</div>
+
+                            <div class="col-2">
+                                <div class="btn-group">
+                                <a style="text-align:left" class="btn btn-warning  main-buttons text-left" href="{{ url_for('edit_todo', to_do_id=entry.id) }}" role="button">Edit</a>
+                                <a style="text-align:left" class="btn btn-danger  main-buttons text-left" href="{{ url_for('delete_todo', to_do_id=entry.id) }}" role="button">Delete</a>
+                                    </div>
+                            </div>
+                        </div>
+
+                        {% endfor %}
+
+
+
+
+
+                </div>
+        </div>
+
+
+
+        <div class="column">
+                <div class="container-fluid">
+                            <!--                FLASK FORM ENTRY HERE-->
+
+                        <div style="--bs-bg-opacity: .5;" class="row text-black-50 mx-auto mt-2 mb-5 bg-light">
+
+
+                            {{ render_form(form, form_type='horizontal', horizontal_columns=('sm', 2, 2), novalidate=True) }}
+
+
+
+
+
+
+
+                        </div>
+
+                </div>
+        </div>
+
+
+</div>
+
+
+<!--                    <div class="text-center">-->
+<!--                        <h1 class="mx-auto my-0 text-uppercase">Grayscale</h1>-->
+<!--                        <h2 class="text-white-50 mx-auto mt-2 mb-5">A free, responsive, one page Bootstrap theme created by Start Bootstrap.</h2>-->
+<!--                        <a class="btn btn-primary" href="#about">Get Started</a>-->
+<!--                    </div>-->
+
+
+<!--                </div>-->
+            </div>
+
+
+
+
+
+
+
+        </header>
+        <!-- About-->
+        <section class="about-section text-center" id="about">
+
+        </section>
+        <!-- Projects-->
+        <section class="projects-section" id="projects">
+
+        </section>
+        <!-- Signup-->
+        <section class="signup-section" id="signup">
+            <div class="container px-4 px-lg-5">
+                <div class="row gx-4 gx-lg-5">
+                    <div class="col-md-10 col-lg-8 mx-auto text-center">
+                        <i class="far fa-paper-plane fa-2x mb-2 text-white"></i>
+                        <h2 class="text-white mb-5">Subscribe to receive updates!</h2>
+                        <!-- * * * * * * * * * * * * * * *-->
+                        <!-- * * SB Forms Contact Form * *-->
+                        <!-- * * * * * * * * * * * * * * *-->
+                        <!-- This form is pre-integrated with SB Forms.-->
+                        <!-- To make this form functional, sign up at-->
+                        <!-- https://startbootstrap.com/solution/contact-forms-->
+                        <!-- to get an API token!-->
+                        <form class="form-signup" id="contactForm" data-sb-form-api-token="API_TOKEN">
+                            <!-- Email address input-->
+                            <div class="row input-group-newsletter">
+                                <div class="col"><input class="form-control" id="emailAddress" type="email" placeholder="Enter email address..." aria-label="Enter email address..." data-sb-validations="required,email" /></div>
+                                <div class="col-auto"><button class="btn btn-primary disabled" id="submitButton" type="submit">Notify Me!</button></div>
+                            </div>
+                            <div class="invalid-feedback mt-2" data-sb-feedback="emailAddress:required">An email is required.</div>
+                            <div class="invalid-feedback mt-2" data-sb-feedback="emailAddress:email">Email is not valid.</div>
+                            <!-- Submit success message-->
+                            <!---->
+                            <!-- This is what your users will see when the form-->
+                            <!-- has successfully submitted-->
+                            <div class="d-none" id="submitSuccessMessage">
+                                <div class="text-center mb-3 mt-2 text-white">
+                                    <div class="fw-bolder">Form submission successful!</div>
+                                    To activate this form, sign up at
+                                    <br />
+                                    <a href="https://startbootstrap.com/solution/contact-forms">https://startbootstrap.com/solution/contact-forms</a>
+                                </div>
+                            </div>
+                            <!-- Submit error message-->
+                            <!---->
+                            <!-- This is what your users will see when there is-->
+                            <!-- an error submitting the form-->
+                            <div class="d-none" id="submitErrorMessage"><div class="text-center text-danger mb-3 mt-2">Error sending message!</div></div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- Contact-->
+        <section class="contact-section bg-black">
+            <div class="container px-4 px-lg-5">
+                <div class="row gx-4 gx-lg-5">
+                    <div class="col-md-4 mb-3 mb-md-0">
+                        <div class="card py-4 h-100">
+                            <div class="card-body text-center">
+                                <i class="fas fa-map-marked-alt text-primary mb-2"></i>
+                                <h4 class="text-uppercase m-0">Address</h4>
+                                <hr class="my-4 mx-auto" />
+                                <div class="small text-black-50">4923 Market Street, Orlando FL</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4 mb-3 mb-md-0">
+                        <div class="card py-4 h-100">
+                            <div class="card-body text-center">
+                                <i class="fas fa-envelope text-primary mb-2"></i>
+                                <h4 class="text-uppercase m-0">Email</h4>
+                                <hr class="my-4 mx-auto" />
+                                <div class="small text-black-50"><a href="#!">hello@yourdomain.com</a></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4 mb-3 mb-md-0">
+                        <div class="card py-4 h-100">
+                            <div class="card-body text-center">
+                                <i class="fas fa-mobile-alt text-primary mb-2"></i>
+                                <h4 class="text-uppercase m-0">Phone</h4>
+                                <hr class="my-4 mx-auto" />
+                                <div class="small text-black-50">+1 (555) 902-8832</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="social d-flex justify-content-center">
+                    <a class="mx-2" href="#!"><i class="fab fa-twitter"></i></a>
+                    <a class="mx-2" href="#!"><i class="fab fa-facebook-f"></i></a>
+                    <a class="mx-2" href="#!"><i class="fab fa-github"></i></a>
+                </div>
+            </div>
+        </section>
+        <!-- Footer-->
+        {% include "footer.html" %}
+
+    </body>
+</html>

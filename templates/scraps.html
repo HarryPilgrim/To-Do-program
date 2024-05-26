@@ -1,0 +1,61 @@
+
+  <input id="date" name="date" class="textbox-n" type="text" onfocus="(this.type='date')" onblur="(this.type='text')" placeholder="{{ todo_to_edit.due_date }}"  />
+
+
+
+
+
+                            <div class="col-6">{{ form.to_do_task(size=50) }}</div>
+
+                            <div class="col-2">{{ form.category }}</div>
+
+                            <div class="col-2">{{ form.due_date }}</div>
+<!--                                                    why do we have this action going to /get?-->
+                                                     <div class="col-2"><form action="{{ url_for('main_page') }}" method="POST"><button formtarget="_blank"
+                                                     type="submit"
+                                                    formaction="{{ url_for('main_page') }}"
+                                                    value= {{ form.submit }}>Submit </button>
+                                                    </form>
+                                                    </div>
+
+<!--                            {{ render_form(form, form_type='horizontal', horizontal_columns=('sm', 2, 2), novalidate=True) }}-->
+
+
+
+                                                        <form
+                                    id="ToDoForm"
+                                    name="sentMessage"
+                                    action = "{{ url_for('main_page') }}"
+                                    method="post">
+
+                              <div class="form-row">
+                                <div class="col-6">
+                                  <input id="to-do" name="to-do" type="text" class="form-control" placeholder="To-Do task...">
+                                </div>
+
+
+                                <div class="col-2">
+
+                                    <select class="custom-select" id="category_choice">
+<!--                                      <option selected>add new category</option>-->
+
+                                        {% for cat in category_choices %}
+                                      <option value="{{ cat[0] }}">{{ cat[1]}}</option>
+                                        {% endfor %}
+
+                                    </select>
+
+                                </div>
+
+
+                                <div class="col-2">
+                                  <input id="due_date" type="date" class="form-control" placeholder="dd-mm-yyyy">
+                                </div>
+
+                                      <div class="col-2">
+                                          <button type="submit" class="btn btn-primary mb-2">Submit</button>
+                                        </div>
+
+
+                              </div>
+                            </form>
