@@ -1,4 +1,5 @@
 import datetime
+import hashlib
 from datetime import date
 import os.path
 import sqlalchemy
@@ -13,6 +14,9 @@ from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField, SelectField, BooleanField, DateField
 from wtforms.validators import DataRequired, URL
 import csv
+
+from matplotlib.pyplot import cm
+import numpy as np
 
 
 app = Flask(__name__)
@@ -62,8 +66,14 @@ if not os.path.exists(file_path):
         db.create_all()
 
 
+def generate_color(variable):
+    # Generate a consistent color for the given variable
+    hash = hashlib.md5(variable.encode()).hexdigest()
+    r = int(hash[:2], 16)
+    g = int(hash[2:4], 16)
+    b = int(hash[4:6], 16)
+    return f'rgb({r}, {g}, {b})'
 
-# ---------------------------- FLASK WEBPAGES  ------------------------------- #
 
 @app.route("/<ordering_by>", methods=["GET", "POST"])
 def main_page(ordering_by):
@@ -72,6 +82,13 @@ def main_page(ordering_by):
     elif ordering_by == 'category':
         all_database_entries = db.session.execute(db.select(ToDo).order_by(ToDo.category)).scalars()
 
+    cats = [to_do.category for to_do in ToDo.query.all()]
+    #distinct_cats = list(set([to_do.category for to_do in ToDo.query.all()])) ###gives all the distincts categories
+    #cat_colours = cm.rainbow(np.linspace(0, 1, len(distinct_cats)))   ###gives colours for the cats
+    cat_colours = {var: generate_color(var) for var in cats}
+
+
+    todays_date = datetime.datetime.today()
 
     form = ToDoForm()
     form.category.choices = [("add_new_category", "add new category")] + list(set([(to_do.category, to_do.category) for to_do in ToDo.query.all()]))
@@ -96,7 +113,7 @@ def main_page(ordering_by):
 
 
         else:
-            return redirect(url_for('main_page'), code=302)
+            return redirect(url_for('main_page', ordering_by='due_date'), code=302)
 
         # if formy.category.choices == "add_new_category":
         #     if request.method == "GET":
@@ -106,7 +123,7 @@ def main_page(ordering_by):
         #         print(new_category)
 
 
-    return render_template("index.html", form=form, database_entries=all_database_entries)
+    return render_template("index.html", form=form, database_entries=all_database_entries, cats=cats, cat_colours=cat_colours, todays_date=todays_date)
 
 
 @app.route("/add-category", methods=["GET", "POST"])
@@ -122,7 +139,7 @@ def add_category():
         cat_to_change.category = new_category
         db.session.commit()
 
-        return redirect(url_for('main_page'))
+        return redirect(url_for('main_page', ordering_by='due_date'))
 
 
 @app.route("/order-by-date")
